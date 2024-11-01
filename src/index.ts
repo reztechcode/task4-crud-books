@@ -4,7 +4,9 @@ import mongoose from 'mongoose';
 dotenv.config();
 import bookRoutes from './routes/bookRoutes'
 import authRoutes from './routes/authRoutes'
-
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerOptions from './swaggerConfigurations';
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -16,9 +18,9 @@ mongoose.connect(MONGO_URI)
 .then(() => console.log('Connected to MongoDB'))
 .catch(error => console.log('MongoDB connection error:', error));
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('My stater Template for typescript project, IrezAbd');
-});
+// Menggunakan Swagger UI
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', authRoutes);
